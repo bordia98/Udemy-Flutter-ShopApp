@@ -21,6 +21,7 @@ class Cart with ChangeNotifier{
   Map<String,CartItem> _items={};
 
   Map<String,CartItem> get item{
+    print(_items.length);
     return {..._items};
   }
 
@@ -71,5 +72,20 @@ class Cart with ChangeNotifier{
     _items = {};
     notifyListeners();
   }
-  
+
+  void reduceqty(String id){
+    if (!_items.containsKey(id)){
+      return;
+    }
+    print(_items[id].quantity);
+    if(_items[id].quantity > 1){
+      _items.update(id, (pro){
+        pro.quantity = pro.quantity -1;
+        return pro;
+      });
+    }else{
+      _items.remove(id);
+    }
+  notifyListeners();
+  }
 }
