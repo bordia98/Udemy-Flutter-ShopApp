@@ -23,7 +23,26 @@ class ProductProvider with ChangeNotifier{
     );
   }
 
-  void addProduct(){
+  void addProduct(Product pro){
+    if(pro.id == null){
+      final toadd = Product(
+        id: DateTime.now().toString(),
+        title: pro.title,
+        description: pro.description,
+        imageUrl: pro.imageUrl,
+        price: pro.price
+      );
+      _products.add(toadd);
+    }else{
+      var index =  _products.indexOf(_products.firstWhere((val)=> val.id == pro.id));
+      _products[index] = pro; 
+    }
+    notifyListeners();
+  }
+
+  void deleteProduct(String id){
+    var index =  _products.indexOf(_products.firstWhere((val)=> val.id == id));
+    _products.removeAt(index);
     notifyListeners();
   }
 

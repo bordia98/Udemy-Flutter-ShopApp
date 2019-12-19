@@ -29,6 +29,19 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
+              Icons.assignment,
+              color: Theme.of(context).primaryColor,
+            ),
+            title: const Text("Manage Products"),
+            onTap: (){
+              Navigator.of(context).pushReplacementNamed("/userproduct");
+            },
+          ),
+          Divider(
+            thickness: 5,
+          ),
+          ListTile(
+            leading: Icon(
               Icons.history,
               color: Theme.of(context).primaryColor,
             ),
