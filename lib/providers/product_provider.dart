@@ -110,10 +110,20 @@ class ProductProvider with ChangeNotifier{
     }
   }
 
-  void deleteProduct(String id){
-    var index =  _products.indexOf(_products.firstWhere((val)=> val.id == id));
-    _products.removeAt(index);
-    notifyListeners();
-  }
+  Future<void> deleteProduct(String id) async{
+    final url = "https://flutter-shop-app-725c6.firebaseio.com/products/${id}.json";
+    try{
+      final response = await http.delete(url);
 
+      if(response.statusCode >= 400){
+        throw Exception("Error encountered while deleting");
+      }
+      var index =  _products.indexOf(_products.firstWhere((val)=> val.id == id));
+      _products.removeAt(index);
+      notifyListeners();
+    }catch(error){
+      print(error.toString());
+      throw error;
+    }
+  }
 }
