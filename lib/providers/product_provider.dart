@@ -7,9 +7,36 @@ import './product.dart';
 
 
 class ProductProvider with ChangeNotifier{
-  List<Product> _products = dummyProduct;
+  List<Product> _products = [];
 
-  List<Product> get listofproducts{
+
+  Future<void> getproductfromdatabase() async{
+    final url = 'https://flutter-shop-app-725c6.firebaseio.com/products.json';
+    try{
+      final response = await http.get(url);
+      print("Mujhe call kiya");
+      List<Product> newlist =[];
+      Map productlist = json.decode(response.body);
+      productlist.forEach((key,dynamic value){
+        var pro = Product(
+          id: key,
+          title: value["title"],
+          price: value["price"],
+          description: value["description"],
+          imageUrl: value["imageUrl"],
+          isFavorite: value["isFavorite"]
+        );
+        newlist.add(pro);
+      });
+      _products = [...newlist];
+      notifyListeners();
+    }catch(error){
+      print(error.toString());
+      throw error;
+    }
+  }
+
+  List<Product> get listofproducts {
     return [..._products];
   }
 

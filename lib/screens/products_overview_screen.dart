@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../providers/product_provider.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/badge.dart';
 import "../widgets/product_grid.dart";
@@ -12,9 +13,34 @@ class ProductsOverviewScreen extends StatefulWidget {
 }
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+
+  bool firsttime = true;
+  bool isloading = false;
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies(){
+    if(firsttime){
+      setState(() {
+        isloading = true;
+      });
+      Provider.of<ProductProvider>(context).getproductfromdatabase();
+      firsttime = !firsttime;
+      setState(() {
+        isloading = false;
+      });
+    }
+    super.didChangeDependencies();
+  }
+
+
   bool fav=false;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
+    final pro = Provider.of<ProductProvider>(context);
     var scaffold = Scaffold(
       appBar: AppBar(
         title: Text(
@@ -67,7 +93,14 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ],
       ),
       drawer: MainDrawer(),
-      body: ProductGrid(fav),
+      body: isloading ? 
+        Container(
+          height: 200,
+          width: double.infinity, 
+          child: Center( child: CircularProgressIndicator(),
+          ),
+        ) 
+        : ProductGrid(fav),
     );
     return scaffold;
   }
